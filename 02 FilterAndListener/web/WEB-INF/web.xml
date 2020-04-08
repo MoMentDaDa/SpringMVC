@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+    <!-- <filter>
+            拦截器名称
+         <filter-name>demo1</filter-name>
+         资源的全限定名
+         <filter-class>filter.filter.FilterDemo1</filter-class>
+     </filter>
+     <filter-mapping>
+          对应的拦截器名称
+         <filter-name>demo1</filter-name>
+         拦截路径
+         <url-pattern>/*</url-pattern>
+         拦截方式
+         <dispatcher>REQUEST</dispatcher>
+         <dispatcher>FORWARD</dispatcher>
+     </filter-mapping>-->
+
+    <!--<listener>
+       <listener-class>cn.itcast.web.listener.ContextLoaderListener</listener-class>
+    </listener>-->
+
+    <!--  指定初始化参数 -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/classes/applicationContext.xml</param-value>
+    </context-param>
+
+    <!--编码过滤器-->
+    <!--  <filter>
+          <filter-name>encoding</filter-name>
+          <filter-class>filter.FilterDemo2</filter-class>
+      </filter>
+      <filter-mapping>
+          <filter-name>encoding</filter-name>
+          <url-pattern>/*</url-pattern>
+      </filter-mapping>-->
+
+    <!--  &lt;!&ndash;敏感词过滤器&ndash;&gt;
+     <filter>
+         <filter-name>filter2</filter-name>
+         <filter-class>filter.FilterDemo5</filter-class>
+     </filter>
+     <filter-mapping>
+         <filter-name>filter2</filter-name>
+         <url-pattern>/*</url-pattern>
+     </filter-mapping>
+     &lt;!&ndash;敏感词过滤器&ndash;&gt;
+     <filter>
+         <filter-name>filter3</filter-name>
+         <filter-class>filter.FilterDemo7</filter-class>
+     </filter>
+     <filter-mapping>
+         <filter-name>filter3</filter-name>
+         <url-pattern>/*</url-pattern>
+     </filter-mapping>-->
+</web-app>
