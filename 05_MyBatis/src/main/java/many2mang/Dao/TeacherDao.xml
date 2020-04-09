@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="many2mang.Dao.TeacherDao">
+    <resultMap type="many2mang.Domain.Teacher" id="BaseResultTea">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <!-- 使用内联机制解决额外SQL，集合对象使用 collection 元素 -->
+        <collection property="stds" ofType="many2mang.Domain.Student" columnPrefix="s">
+            <result column="Id" property="id"/>
+            <result column="Name" property="name"/>
+        </collection>
+    </resultMap>
+
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+		insert into teacher (name) values (#{name})
+	</insert>
+
+    <select id="get" resultMap="BaseResultTea">
+		SELECT t.*,s.id as sId,s.`name` as sName FROM teacher as t RIGHT JOIN student_teacher st  ON st.teacher_id=t.id LEFT JOIN student as s on s.id=st.student_id WHERE t.id=#{id}
+	</select>
+
+    <delete id="deleteRelationWithStudent">
+		delete from student_teacher where teacher_id=#{studentId}
+	</delete>
+
+    <delete id="delete">
+		delete from teacher where id=#{id}
+	</delete>
+
+
+    <select id="selectByStudentId" resultType="many2mang.Domain.Teacher">
+		select t.id,t.name from teacher t join student_teacher st on t.id=st.teacher_id where st.student_id =#{studentId}
+	</select>
+</mapper>

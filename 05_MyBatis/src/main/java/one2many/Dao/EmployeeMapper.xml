@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="one2many.Dao.EmployeeMapper">
+    <resultMap type="one2many.Domain.Employee" id="employeeResultMap">
+        <id column="id" property="id"/>
+        <result column="username" property="name"/>
+        <result column="age" property="age"/>
+        <result column="salary" property="salary"/>
+        <result column="hiredate" property="birth"/>
+        <result column="deptID" property="deptId"/>
+    </resultMap>
+
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id" parameterType="one2many.Domain.Employee">
+		insert into employee (username,deptID) values (#{name},#{deptId})
+	</insert>
+
+
+    <select id="selectByDeptID" resultMap="employeeResultMap">
+		select id,username,deptID from employee e where deptID=#{id}
+	</select>
+</mapper>

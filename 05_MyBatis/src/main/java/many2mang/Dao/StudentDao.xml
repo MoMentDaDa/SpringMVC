@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="many2mang.Dao.StudentDao">
+    <resultMap type="many2mang.Domain.Student" id="BaseResultMao">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <!-- 额外SQL 的方式获取老师，也可以使用 sql 的连接查询解决-->
+        <collection property="teachers" ofType="many2mang.Domain.Teacher" select="many2mang.Dao.TeacherDao.selectByStudentId" column="id">
+        </collection>
+    </resultMap>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+		insert into student (name) values (#{name})
+	</insert>
+
+    <insert id="insertRelation">
+		insert into student_teacher (student_id,teacher_id) values (#{studentID},#{teacherID})
+	</insert>
+
+    <select id="get" resultMap="BaseResultMao">
+		select id,name from student where id=#{id}
+	</select>
+
+    <delete id="deleteRelationWithTeacher">
+		delete from student_teacher where student_id=#{studentId}
+	</delete>
+
+    <delete id="delete">
+		delete from student where id=#{id}
+	</delete>
+
+</mapper>

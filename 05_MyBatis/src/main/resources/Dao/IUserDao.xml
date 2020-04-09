@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Dao.IUserDao">
+    <!-- resultMap 可以解决实体类属性名和列名不匹配的情况，还有一种方法是通过SQL语句的 as 实现 -->
+    <!--  <resultMap id="userResultMap" type="Domain.User">
+          <id property="id" column="user_id" />
+          <result property="name" column="user_name"/>
+          <result property="password" column="hashed_password"/>
+      </resultMap>-->
+
+    <!-- 了解的内容：抽取重复的sql语句-->
+    <sql id="defaultUser">
+        select * from user
+
+    </sql>
+
+    <!--配置查询所有-->
+    <select id="findAll" resultType="Domain.User">
+        <!-- 自己写SQL语句-->
+        <!--  select * from user-->
+
+        <!-- 动态引用SQL 语句 -->
+        <include refid="defaultUser"/>
+    </select>
+
+    <!-- 保存用户 -->
+    <insert id="saveUser" parameterType="Domain.User">
+        <!-- 配置插入操作后，获取插入数据的id，-->
+        <!-- order为 BEFORE,先选择主键,设置 keyProperty 然后执行插入语句。如果为 AFTER,那么先执行插入语句 -->
+        <selectKey keyProperty="id" keyColumn="id" resultType="long" order="AFTER">
+            select last_insert_id();
+        </selectKey>
+        insert into user(name,age,password,birthday)values(#{name},#{age},#{password},#{birthday});
+    </insert>
+
+    <!-- 更新用户 -->
+    <update id="updateUser" parameterType="Domain.User">
+        <!-- 自己写SQL语句-->
+        <!-- update user set name=#{name} where id=#{id} -->
+        update user
+        <set>
+            <if test="name!= null">name=#{name},</if>
+            <if test="password!= null">password=#{password},</if>
+            <if test="age!=null">age =#{age},</if>
+            <if test="birthday!= null">birthday=#{birthday}</if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!-- 删除用户-->
+    <delete id="deleteUser" parameterType="java.lang.Long">
+        delete from user where id = #{uid}
+    </delete>
+
+    <!-- 根据id查询用户 -->
+    <select id="findById" parameterType="long" resultType="Domain.User">
+        select * from user where id = #{uid}
+    </select>
+
+    <!-- 根据名称模糊查询 ,第一个是简单的占位符，编译时再填充，第二个是编译时直接替换参数-->
+    <select id="findByName" parameterType="string" resultType="Domain.User">
+        <!--  select * from user where name like #{name} -->
+        select * from user where name like '%${value}%'
+    </select>
+
+    <!-- 获取用户的总记录条数 -->
+    <select id="findTotal" resultType="int">
+        select count(id) from user;
+    </select>
+
+    <!-- 根据queryVo的条件查询用户 -->
+    <select id="findUserByVo" parameterType="Domain.QueryVo" resultType="Domain.User">
+        select * from user where name like #{user.name}
+    </select>
+
+    <!--  动态 SQL 演示 -->
+    <select id="findUserByCondition" resultType="Domain.User" parameterType="Domain.User">
+        select * from user
+
+        <!--  这是一种方式 -->
+        <!--  <where>
+              <if test="name != null">
+                  and name = #{name}
+              </if>
+              <if test="age != null">
+                  and age = #{age}
+              </if>
+          </where>-->
+    </select>
+
+    <!-- 根据queryvo中的Id集合实现查询用户列表 -->
+    <select id="findUserInIds" resultType="Domain.User" parameterType="Domain.QueryVo">
+        <include refid="defaultUser"></include>
+        <where>
+            <if test="ids != null and ids.size()>0">
+                <foreach collection="ids" open="and id in (" close=")" item="uid" separator=",">
+                    #{uid}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+</mapper>

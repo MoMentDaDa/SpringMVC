@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="one2many.Dao.DepartmentMapper">
+    <resultMap type="one2many.Domain.Department" id="departmentResultMap">
+        <id column="dNum" property="id"/>
+        <result column="dName" property="name"/>
+        <!-- 使用内联机制解决额外SQL，集合对象使用 collection 元素 -->
+        <collection property="emps" ofType="one2many.Domain.Employee" columnPrefix="e">
+            <result column="Name" property="name"/>
+            <result column="Age" property="age"/>
+            <result column="Salary" property="salary"/>
+            <result column="Hiredate" property="birth"/>
+        </collection>
+    </resultMap>
+
+    <insert id="save" parameterType="one2many.Domain.Department">
+		insert into dept (deptno,dname) values (#{id},#{name})
+	</insert>
+
+    <select id="get" resultMap="departmentResultMap">
+        SELECT username as eName, age as eAge, salary as eSalary, hiredate as eHiredate, deptno as dNum,dname as dName FROM employee AS e  LEFT JOIN dept AS d on d.deptno=e.deptID WHERE d.dname=#{name}
+	</select>
+</mapper>
