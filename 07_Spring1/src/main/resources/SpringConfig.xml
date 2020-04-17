@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--把对象的创建交给spring来管理-->
+    <!-- 创建 Bean 对象，默认构造函数-->
+    <bean id="accountDao" class="Spring1.Dao.Impl.AccountDaoImpl"/>
+    <bean id="accountService" class="Spring1.Service.Impl.AccountServiceImpl" init-method="init" destroy-method="destroy">
+        <property name="Dao" ref="accountDao"/>
+    </bean>
+
+
+    <!-- 第二种方式： 使用普通工厂中的方法创建对象（使用某个类中的方法创建对象，并存入spring容器）    -->
+    <!--    <bean id="instanceFactory" class="Spring1.Factory.InstanceFactory"/>
+        <bean id="accountService" factory-bean="instanceFactory" factory-method="getAccountService"/>-->
+
+
+    <!-- 第三种方式：使用工厂中的静态方法创建对象（使用某个类中的静态方法创建对象，并存入spring容器)    -->
+    <!--  <bean id="accountService" class="Spring1.Factory.StaticFactory" factory-method="getAccountService"/>-->
+
+
+    <!-- DI 注入 -->
+    <!-- 配置一个日期对象 -->
+    <bean id="date" class="java.util.Date"/>
+    <!-- 方式1：构造函数 -->
+    <!--    <bean id="accountService2" class="Spring1.Service.Impl.AccountServiceImpl2">
+            <constructor-arg name="name" value="泰斯特"/>
+            <constructor-arg name="age" value="18"/>
+            <constructor-arg name="birthday" ref="date"/>
+        </bean>-->
+
+
+    <!-- Set 方法注入 -->
+    <bean id="accountService3" class="Spring1.Service.Impl.AccountServiceImpl3">
+        <property name="name" value="TEST"/>
+        <property name="age" value="21"/>
+        <property name="birthday" ref="date"/>
+    </bean>
+    <!-- P 标签注入 -->
+    <bean id="accountService4" class="Spring1.Service.Impl.AccountServiceImpl3" p:name="test" p:age="21" p:birthday-ref="date"/>
+
+    <!-- 集合 注入 -->
+    <bean id="accountService5" class="Spring1.Service.Impl.AccountServiceImpl4">
+        <property name="myStrs">
+            <set>
+                <value>AAA</value>
+                <value>BBB</value>
+                <value>CCC</value>
+            </set>
+        </property>
+
+        <property name="myList">
+            <array>
+                <value>AAA</value>
+                <value>BBB</value>
+                <value>CCC</value>
+            </array>
+        </property>
+
+        <property name="mySet">
+            <list>
+                <value>AAA</value>
+                <value>BBB</value>
+                <value>CCC</value>
+            </list>
+        </property>
+
+        <property name="myMap">
+            <props>
+                <prop key="testC">ccc</prop>
+                <prop key="testD">ddd</prop>
+            </props>
+        </property>
+
+        <property name="myProps">
+            <map>
+                <entry key="testA" value="aaa"/>
+                <entry key="testB">
+                    <value>BBB</value>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+</beans>

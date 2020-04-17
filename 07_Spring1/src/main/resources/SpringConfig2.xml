@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--配置QueryRunner，JDBC 操作工具类-->
+    <bean id="myRunner" class="org.apache.commons.dbutils.QueryRunner" scope="prototype">
+        <!--注入数据源-->
+        <constructor-arg name="ds" ref="dataSource"/>
+    </bean>
+    <!-- 配置数据源 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <!--连接数据库的必备信息-->
+        <property name="driverClass" value="com.mysql.jdbc.Driver"/>
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/test"/>
+        <property name="user" value="will"/>
+        <property name="password" value="will1234"/>
+    </bean>
+    <!-- 使用P 标签本质还是setter 方法，所以需要提供 setter 方法-->
+    <bean id="accountDao2" class="Spring1.Dao.Impl.AccountDao2Impl" p:runner-ref="myRunner"/>
+    <bean id="accountServiceDao2" class="Spring1.Service.Impl.AccountServiceImpl5" p:accountDao-ref="accountDao2"/>
+</beans>
